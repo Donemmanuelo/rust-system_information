@@ -1,52 +1,41 @@
-name: Build and Slim Docker Image
+name: publish on ghcr.io
 on:
   push:
     branches:
     - main
-      
-        shell_scripting  # Trigger workflow on push to the 'main' branch.
-
+    
 jobs:
-  build-and-slim:
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-
-    steps:
-    # Step 1: Checkout the repository
-    
-    - name: Checkout code
-      uses: actions/checkout@v3
+    build: 
+      runs-on: ubuntu-22.04
+      permissions:
+        packages: write
       
-      
-    # Step 2: Log in to GitHub Container Registry
-    
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.TOKEN }}
 
-    # Step 3: Build the Docker image
-    
-    - name: Build Docker image
-      run: |
-        docker build -t ghcr.io/${{ vars.REPOSITORY }}/area-image:latest .
+      steps:
+      # checkout the repository code
+        - name: checkout code 
+          uses: actions/checkout@v3
 
-    # Step 4: Slim the Docker image using Kitabisa Action
-    
-    - name: Slim Docker image
-      uses: kitabisa/docker-slim-action@v1
-      env:
-        DSLIM_HTTP_PROBE: "false"  # Disables HTTP probing during slimming
-      with:
+        - name: Login to Container Registry
+          uses: docker/login-action@v2
+          with:  
+            registry: ghcr.io 
+            username: ${{ github.actor}}
+            password: ${{ secrets.GITHUB_TOKEN}}
+            
+        - name: Build Docker image
+          run: |
+             docker build -t ghcr.io/${{ vars.REPOSITORY }}/area-image:latest .
+
+        - name: Slim Docker image
+          uses: kitabisa/docker-slim-action@v1
+          env:
+            DSLIM_HTTP_PROBE: "false"  # Disables HTTP probing during slimming
+          with:
             target: ghcr.io/${{ vars.REPOSITORYr }}/area-image:latest  # Target image to slim
             tag: slim  # Suffix for the slimmed image tag
 
-    # Step 5: Push the slimmed image to GitHub Container Registry.
-    
-    - name: Push slimmed Docker image
-      run: |
-        docker push ghcr.io/${{ vars.REPOSITORY}}/area-image:slim
-     
+        - name: Push slimmed Docker image
+          run: |
+            docker push ghcr.io/${{ vars.REPOSITORY}}/area-image:slim
+          
