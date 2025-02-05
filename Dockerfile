@@ -2,6 +2,8 @@ FROM rust:alpine AS build
 
 WORKDIR /app
 
+RUN rustup update nightly
+
 COPY . .
 
 RUN cargo build --release
