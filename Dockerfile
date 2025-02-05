@@ -7,7 +7,6 @@ COPY . .
 RUN cargo build --release
 
 FROM alpine:latest
-WORKDIR /app
 
 COPY --from=build /app/target/release/cli /app/cli
 
