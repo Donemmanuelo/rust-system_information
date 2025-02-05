@@ -1,16 +1,14 @@
-FROM rust:alpine AS build
-
+FROM rust:latest AS builder
 WORKDIR /app
-
-RUN rustup update nightly
-
 COPY . .
 
-RUN apt-get update
 RUN cargo build --release
 
-FROM alpine:latest
 
-COPY --from=build /app/target/release/cli /app/
+FROM debian:latest
+
+RUN apt-get update && apt-get install -y libssl-dev
+
+COPY --from=builder /app/target/release/cli /app/
 
 CMD ["/app/cli"]
