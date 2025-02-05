@@ -2,20 +2,23 @@ name: Build and Slim Docker Image
 on:
   push:
     branches:
-      - main
+    - main
       
         shell_scripting  # Trigger workflow on push to the 'main' branch.
 
 jobs:
   build-and-slim:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
 
     steps:
     # Step 1: Checkout the repository
     
     - name: Checkout code
       uses: actions/checkout@v3
-
+      
+      
     # Step 2: Log in to GitHub Container Registry
     
     - name: Log in to GitHub Container Registry
@@ -46,4 +49,4 @@ jobs:
     - name: Push slimmed Docker image
       run: |
         docker push ghcr.io/${{ vars.REPOSITORY}}/area-image:slim
-
+     
