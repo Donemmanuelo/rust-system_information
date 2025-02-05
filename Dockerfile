@@ -6,10 +6,11 @@ RUN rustup update nightly
 
 COPY . .
 
+RUN apt-get update
 RUN cargo build --release
 
 FROM alpine:latest
 
-COPY --from=build /app/target/release/cli /app/cli
+COPY --from=build /app/target/release/cli /app/
 
 CMD ["/app/cli"]
