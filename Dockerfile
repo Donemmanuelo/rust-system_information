@@ -1,4 +1,4 @@
-FROM rust:1.65.0-bullseye AS builder
+FROM rust:nginx AS build
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY . .
 
 RUN cargo build --release
 
-FROM debian:11.5
+FROM alpine:latest
 WORKDIR /app
 
 COPY --from=build /app/target/release/cli /app/cli
