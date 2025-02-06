@@ -32,10 +32,10 @@ jobs:
           env:
             DSLIM_HTTP_PROBE: "false"  # Disables HTTP probing during slimming
           with:
-            target: ghcr.io/${{ vars.REPOSITORYr }}/area-image:latest  # Target image to slim
+            target: ghcr.io/${{ vars.REPOSITORY }}/area-image:latest  # Target image to slim
             tag: slim  # Suffix for the slimmed image tag
 
         - name: Push slimmed Docker image
           run: |
-            docker push ghcr.io/${{ vars.REPOSITORY}}/area-image:slim
+            docker push ghcr.io/${{ vars.REPOSITORY }}/area-image:slim
           
